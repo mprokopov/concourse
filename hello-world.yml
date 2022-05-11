@@ -1,0 +1,44 @@
+resources:
+  - name: repo
+    type: git
+    source:
+      uri: https://github.com/mprokopov/concourse.git
+
+jobs:
+  - name: hello-world-job
+    plan:
+      - task: hello-world-task
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: busybox
+          outputs:
+            - name: the-artifact
+          run:
+            # Change the command to `ls -lF` to see
+            # what the task sees in its working directory
+            path: sh
+            args:
+              - -cx
+              - |
+                ls -l .
+                echo "hello from step" > the-artifact/message
+      - task: read-the-artifact
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: busybox
+          # To recieve "the-artifact", specify it as an input
+          inputs:
+            - name: the-artifact
+          run:
+            path: sh
+            args:
+              - -cx
+              - |
+                ls -l .
+                cat the-artifact/message
