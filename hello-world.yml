@@ -18,6 +18,8 @@ jobs:
               repository: busybox
           outputs:
             - name: the-artifact
+          inputs: # add the get step as an input to this task
+            - name: repo
           run:
             # Change the command to `ls -lF` to see
             # what the task sees in its working directory
@@ -26,7 +28,7 @@ jobs:
               - -cx
               - |
                 ls -l .
-                echo "hello from step1" > the-artifact/message
+                cat hello-world.yml > the-artifact/message
       - task: read-the-artifact
         config:
           platform: linux
