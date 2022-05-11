@@ -7,6 +7,8 @@ resources:
 jobs:
   - name: hello-world-job
     plan:
+      - get: repo
+        trigger: true
       - task: hello-world-task
         config:
           platform: linux
@@ -24,7 +26,7 @@ jobs:
               - -cx
               - |
                 ls -l .
-                echo "hello from step" > the-artifact/message
+                echo "hello from step1" > the-artifact/message
       - task: read-the-artifact
         config:
           platform: linux
